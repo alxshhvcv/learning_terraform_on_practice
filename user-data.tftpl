@@ -1,0 +1,18 @@
+#cloud-config
+users:
+  - name: devops
+    groups: users, admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+%{ for key, value in ssh_keys ~}
+      - ${value}
+%{ endfor ~}
+package_update: true
+package_upgrade: true
+%{ if packages != [] ~}
+packages:
+%{ for key, value in packages ~}
+  - ${value}
+%{ endfor ~}
+%{ endif ~}
